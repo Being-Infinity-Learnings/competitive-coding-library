@@ -19,15 +19,30 @@ class Tree{
 }
 class DPOnTrees{
     int levels[];
+    int inTime[], outTime[];
     Tree tree;
+    int time;
     DPOnTrees(int root, Tree tree) {
         this.tree = tree;
+        this.time = 1;
         levels = new int[tree.adjList.size()+ 1];
+        inTime = new int[tree.adjList.size()+ 1];
+        outTime = new int[tree.adjList.size()+ 1];
         // pre-Compute
         levels[root] = 1;
         preComputeLevels(root, -1);
+        preComputeInOutTime(root, -1);
     }
 
+    void preComputeInOutTime(int u, int par) {
+        inTime[u] = time++;
+        for(int v : tree.adjList.get(u)) {
+            if(v != par) {
+                preComputeInOutTime(v, u);
+            }
+        }
+        outTime[u] = time++;
+    }
     void preComputeLevels(int u, int par) {
         for(int v : tree.adjList.get(u)) {
             if(v != par) {
