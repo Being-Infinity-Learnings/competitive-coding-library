@@ -94,7 +94,8 @@ class WeightedGraph{
 class BellmanFord {
   static final long INF = 1000000000000000000L;
   WeightedGraph g;
-    long[] dist;
+  long[] dist;
+  int[] parent;
 
   BellmanFord(int n, WeightedGraph g) {
     this.g = g;
@@ -102,18 +103,24 @@ class BellmanFord {
 
   long[] getDistances(int source) {
     dist = new long[g.adjList.size()];
+    parent = new int[g.adjList.size()];
 
     Arrays.fill(dist, INF);
+    Arrays.fill(parent, -1);
     dist[source] = 0;    
-    for (int i = 1; i < g.adjList.size(); i++) { // Relax edges repeatedly |V| - 1 times
+    for (int i = 1; i < g.adjList.size(); i++) { // Relax edges repeatedly at MAX |V| - 1 times
+      boolean updated = false;
       for (Triplet edge : g.edgeList) {
         int u = (int)edge.first;
         int v = (int)edge.second;
         int w = (int)edge.third;
         if (dist[u] != INF && dist[u] + w < dist[v]) {
           dist[v] = dist[u] + w;
+          parent[v] = u;
+          updated = true;
         }
       }
+      if(!updated) break; // No updates in this iteration, so we can stop early
     }
     return dist;
   }
@@ -135,7 +142,7 @@ class BellmanFord {
 class Main {
   public static void main(String[] args) throws Exception {
     /*
-    1
+    2
     5 6
     1 2 3
     2 3 -2
@@ -143,11 +150,18 @@ class Main {
     3 4 1
     1 5 -1
     2 3 3
+    6 6
+    6 5 -99
+    6 1 99
+    1 2 15
+    2 3 0
+    3 1 -42
+    3 4 2
     */
 
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
       PrintWriter pw = new PrintWriter(System.out, false);
-      int t = 1; // Integer.parseInt(br.readLine());
+      int t = Integer.parseInt(br.readLine());
       while (t-- != 0) {
         StringTokenizer st = new StringTokenizer(br.readLine());
         int V = Integer.parseInt(st.nextToken());
@@ -167,10 +181,15 @@ class Main {
 
         BellmanFord b = new BellmanFord(V, g);
         long[] dist = b.getDistances(1); // Get distances from node 0
-        for(int i = 1; i <= V; i++){
-            pw.print((dist[i] == BellmanFord.INF) ? -1 : dist[i] + " ");
+        if(b.hasNegativeCycle()){
+            pw.println("Negative cycle detected");
+        } else {
+            pw.println("Shortest distances from source node 1:");
+            for(int i = 1; i <= V; i++){
+                pw.print((dist[i] == BellmanFord.INF) ? -1 : dist[i] + " ");
+            }
+            pw.println();
         }
-        pw.println();
     }
 
     br.close();
