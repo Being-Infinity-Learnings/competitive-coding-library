@@ -1,30 +1,7 @@
 import java.util.*;
 
 class StringTrie {
-    class TrieNode {
-        private final Map<Character, TrieNode> children;
-        private boolean isEndOfWord;
-
-        public TrieNode() {
-            children = new HashMap<>();
-            isEndOfWord = false;
-        }
-
-        public Map<Character, TrieNode> getChildren() {
-            return children;
-        }
-
-        public boolean isEndOfWord() {
-            return isEndOfWord;
-        }
-
-        public void setEndOfWord(boolean isEndOfWord) {
-            this.isEndOfWord = isEndOfWord;
-        }
-    }   
-    private final TrieNode root;
-
-    public Trie() {
+    public StringTrie() {
         root = new TrieNode();
     }
 
@@ -57,4 +34,27 @@ class StringTrie {
         }
         return true;
     }    
+
+    private final TrieNode root;
+    private static class TrieNode {
+        private final Map<Character, TrieNode> children;
+        private boolean isEndOfWord;
+
+        public TrieNode() {
+            children = new HashMap<>();
+            isEndOfWord = false;
+        }
+
+        public Map<Character, TrieNode> getChildren() {
+            return children;
+        }
+
+        public boolean isEndOfWord() {
+            return isEndOfWord;
+        }
+
+        public void setEndOfWord(boolean isEndOfWord) {
+            this.isEndOfWord = isEndOfWord;
+        }
+    }   
 }
