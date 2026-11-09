@@ -1,23 +1,12 @@
 class BinaryTrie{
-    class TrieNode{
-        TrieNode[] children;
-        int count;
-
-        TrieNode(){
-            children = new TrieNode[2];
-            count = 0;
-        }
-    }
-
-    private TrieNode root;
     private final int BIT_SIZE = 31; // Assuming 32-bit integers
     public BinaryTrie(){
         root = new TrieNode();
     }
-    public void insert(int num){
+    public void insert(long num){
         TrieNode node = root;
         for(int i = BIT_SIZE; i >= 0; i--){
-            int bit = (num >> i) & 1;
+            int bit = (int)((num >> i) & 1);
             if(node.children[bit] == null){
                 node.children[bit] = new TrieNode();
             }
@@ -25,10 +14,10 @@ class BinaryTrie{
             node.count++;
         }
     }
-    public void delete(int num){
+    public void delete(long num){
         TrieNode node = root;
         for(int i = BIT_SIZE; i >= 0; i--){
-            int bit = (num >> i) & 1;
+            int bit = (int)((num >> i) & 1);
             TrieNode child = node.children[bit];
             if(child == null || child.count == 0){
                 return; // Number not present
@@ -37,11 +26,11 @@ class BinaryTrie{
             node = child;
         }
     }
-    public int maxXor(int num){
+    public int maxXor(long num){
         TrieNode node = root;
         int maxXor = 0;
         for(int i = BIT_SIZE; i >= 0; i--){
-            int bit = (num >> i) & 1;
+            int bit = (int)((num >> i) & 1);
             int toggledBit = 1 - bit;
             if(node.children[toggledBit] != null && node.children[toggledBit].count > 0){
                 maxXor |= (1 << i);
@@ -53,5 +42,16 @@ class BinaryTrie{
             }
         }
         return maxXor;
+    }
+
+    private TrieNode root;
+    private static class TrieNode{
+        TrieNode[] children;
+        int count;
+
+        TrieNode(){
+            children = new TrieNode[2];
+            count = 0;
+        }
     }
 }
